@@ -33,5 +33,5 @@ for i in range(len(listStr)):
     first = parse_from_string(digs[0])
     last = parse_from_string(digs[-1])
     listNum.append((first * 10) + last)
-    print((first * 10) + last)
+    
 print(sum(listNum))
