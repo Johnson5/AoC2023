@@ -29,9 +29,8 @@ def parse_from_string(string):
 
 for i in range(len(listStr)):
     digs = regex.findall('\d|one|two|three|four|five|six|seven|eight|nine', listStr[i], overlapped=True)
-    print(listStr[i], digs)
     first = parse_from_string(digs[0])
     last = parse_from_string(digs[-1])
     listNum.append((first * 10) + last)
-    
+
 print(sum(listNum))
