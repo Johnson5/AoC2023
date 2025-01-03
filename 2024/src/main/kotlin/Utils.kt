@@ -3,7 +3,15 @@ import kotlin.io.path.readText
 
 fun readInput(name: String) = Path("src/test/resources/$name.txt").readText().trim().lines()
 
+fun readInputEmptyLine(name: String) = Path("src/test/resources/$name.txt").readText().trim().split("\r\n\r\n")
+
 data class Coordinate(val x: Int, val y: Int) {
+    companion object {
+        fun origin(): Coordinate {
+            return Coordinate(0,0)
+        }
+    }
+
     // Override the toString() method to return the format (x, y)
     override fun toString(): String {
         return "($x, $y)"
@@ -21,10 +29,31 @@ data class Coordinate(val x: Int, val y: Int) {
     fun right(): Coordinate {
         return Coordinate(x + 1, y)
     }
+
+    // Plus operator to add two Coordinates
+    operator fun plus(other: Coordinate): Coordinate {
+        return Coordinate(this.x + other.x, this.y + other.y)
+    }
+
+    // Minus operator to subtract two Coordinates
+    operator fun minus(other: Coordinate): Coordinate {
+        return Coordinate(this.x - other.x, this.y - other.y)
+    }
 }
 
-class Grid<T>(lines: List<String>, private val converter: (Char) -> T) : Iterable<List<T>> {
-    val grid: MutableList<MutableList<T>> = lines.map { row -> row.map(converter).toMutableList() }.toMutableList()
+class Grid<T> : Iterable<List<T>>{
+    val grid: MutableList<MutableList<T>>
+
+    constructor(x: Int, y: Int, initialValue: T) {
+        grid = List(y) {MutableList(x) {initialValue} }.toMutableList()
+    }
+
+    constructor(lines: List<String>, converter: (Char) -> T) {
+        grid = lines.map {row -> row.map(converter).toMutableList() }.toMutableList()
+    }
+
+
+    override fun toString() = grid.joinToString("\n") { it.joinToString("") }
 
     override fun iterator(): Iterator<List<T>> {
         return grid.iterator()
